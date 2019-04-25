@@ -8,7 +8,7 @@ import com.ahmad.typedown.Model.Note
 import com.ahmad.typedown.Model.NoteDao
 
 @Database(entities = [Note::class], version = 1)
-abstract class NoteDatabase : RoomDatabase {
+abstract class NoteDatabase : RoomDatabase() {
 
     abstract fun noteDao():NoteDao
 
