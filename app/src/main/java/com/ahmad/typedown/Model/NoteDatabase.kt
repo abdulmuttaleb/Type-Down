@@ -1,4 +1,4 @@
-package com.ahmad.typedown
+package com.ahmad.typedown.Model
 
 import android.content.Context
 import android.os.AsyncTask
@@ -6,8 +6,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.ahmad.typedown.Model.Note
-import com.ahmad.typedown.Model.NoteDao
 
 @Database(entities = [Note::class], version = 1)
 abstract class NoteDatabase : RoomDatabase() {
@@ -35,7 +33,8 @@ abstract class NoteDatabase : RoomDatabase() {
         private val roomCallback =  object : RoomDatabase.Callback(){
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                PopulateDbAsyncTask(instance).execute()
+                PopulateDbAsyncTask(instance)
+                    .execute()
             }
         }
     }

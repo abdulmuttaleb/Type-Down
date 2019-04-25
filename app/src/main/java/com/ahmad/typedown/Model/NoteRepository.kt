@@ -3,8 +3,6 @@ package com.ahmad.typedown.Model
 import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
-import androidx.room.Update
-import com.ahmad.typedown.NoteDatabase
 
 class NoteRepository (application:Application){
 
@@ -47,7 +45,7 @@ class NoteRepository (application:Application){
     private var allNotes: LiveData<List<Note>>
 
     init {
-        val noteDatabase:NoteDatabase = NoteDatabase.getInstance(application.applicationContext)!!
+        val noteDatabase: NoteDatabase = NoteDatabase.getInstance(application.applicationContext)!!
         noteDao = noteDatabase.noteDao()
         allNotes = noteDao.getAllNotes()
     }
