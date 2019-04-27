@@ -16,6 +16,10 @@ class NoteAdapter(var notes:List<Note>): RecyclerView.Adapter<NoteAdapter.NoteVi
         notifyDataSetChanged()
     }
 
+    fun getNoteAt(position: Int):Note{
+        return notes[position]
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false))
     }
