@@ -41,18 +41,17 @@ class AddNoteActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        MenuInflater(this).inflate(R.menu.add_note_menu,menu)
+        menuInflater.inflate(R.menu.add_note_menu,menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        return when(item?.itemId){
             R.id.save_note -> {
-                //todo save note
                 saveNote()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -62,11 +61,12 @@ class AddNoteActivity : AppCompatActivity() {
             return
         }
 
-        var data=Intent()
-        data.putExtra(EXTRA_TITLE,titleEditText.text)
-        data.putExtra(EXTRA_DESCRIPTION,descriptionEditText.text)
-        data.putExtra(EXTRA_PRIORITY,priorityPicker.value)
-        data.putExtra(EXTRA_ID,titleEditText.text)
+        val data=Intent().apply {
+            putExtra(EXTRA_TITLE,titleEditText.text.toString())
+            putExtra(EXTRA_DESCRIPTION,descriptionEditText.text.toString())
+            putExtra(EXTRA_PRIORITY,priorityPicker.value)
+            putExtra(EXTRA_ID,titleEditText.text)
+        }
 
         setResult(RESULT_OK,data)
         finish()
