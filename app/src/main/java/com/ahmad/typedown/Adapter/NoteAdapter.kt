@@ -4,33 +4,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ahmad.typedown.Model.Note
 import com.ahmad.typedown.R
 
-class NoteAdapter(var notes:List<Note>): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(){
+class NoteAdapter: ListAdapter<Note, NoteAdapter.NoteViewHolder>(DIFF_CALLBACK){
 
     private var clickListener: OnItemClickListener? = null
 
-    fun setAdapterNotes(notes:List<Note>){
-        this.notes = notes
-        notifyDataSetChanged()
+    companion object{
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Note>(){
+            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.equals(newItem)
+            }
+        }
     }
 
     fun getNoteAt(position: Int):Note{
-        return notes[position]
+        return getItem(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false))
     }
 
-    override fun getItemCount(): Int {
-        return notes.size
-    }
-
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val note = notes[position]
+        val note = getItem(position)
         holder.title.text = note.title
         holder.priority.text = note.priority.toString()
         holder.description.text = note.description
@@ -45,7 +50,7 @@ class NoteAdapter(var notes:List<Note>): RecyclerView.Adapter<NoteAdapter.NoteVi
             itemView.setOnClickListener{
                 val position:Int = adapterPosition
                 if(position != RecyclerView.NO_POSITION){
-                    clickListener?.onItemClick(notes[position])
+                    clickListener?.onItemClick(getItem(position))
                 }
             }
         }

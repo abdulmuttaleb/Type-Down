@@ -10,4 +10,8 @@ data class Note (var title:String,
 
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0
+
+    fun equals(other: Note): Boolean {
+        return title == other.title && description == other.description && priority == other.priority
+    }
 }

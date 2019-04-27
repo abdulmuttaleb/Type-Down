@@ -43,13 +43,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
-        adapter = NoteAdapter(arrayListOf())
+        adapter = NoteAdapter()
         recyclerView.adapter = adapter
 
 
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         noteViewModel.getAllNotes().observe(this, Observer {
-            adapter.setAdapterNotes(it)
+            adapter.submitList(it)
         })
 
         addFab.setOnClickListener {
