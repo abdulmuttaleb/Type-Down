@@ -10,6 +10,7 @@ import com.ahmad.typedown.R
 
 class NoteAdapter(var notes:List<Note>): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(){
 
+    private var clickListener: OnItemClickListener? = null
 
     fun setAdapterNotes(notes:List<Note>){
         this.notes = notes
@@ -40,5 +41,23 @@ class NoteAdapter(var notes:List<Note>): RecyclerView.Adapter<NoteAdapter.NoteVi
         var priority : TextView = itemView.findViewById(R.id.tv_priority)
         var description : TextView = itemView.findViewById(R.id.tv_description)
 
+        init {
+            itemView.setOnClickListener{
+                val position:Int = adapterPosition
+                if(position != RecyclerView.NO_POSITION){
+                    clickListener?.onItemClick(notes[position])
+                }
+            }
+        }
     }
+
+
+    interface OnItemClickListener{
+        fun onItemClick(note: Note)
+    }
+
+    fun setOnItemClickListener(listener:OnItemClickListener){
+        this.clickListener = listener
+    }
+
 }

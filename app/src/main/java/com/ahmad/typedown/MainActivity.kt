@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ahmad.typedown.Adapter.NoteAdapter
 import com.ahmad.typedown.AddNoteActivity.Companion.EXTRA_DESCRIPTION
+import com.ahmad.typedown.AddNoteActivity.Companion.EXTRA_ID
 import com.ahmad.typedown.AddNoteActivity.Companion.EXTRA_PRIORITY
 import com.ahmad.typedown.AddNoteActivity.Companion.EXTRA_TITLE
 import com.ahmad.typedown.Model.Note
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         const val ADD_NOTE_REQUEST = 1
+        const val EDIT_NOTE_REQUEST = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         addFab.setOnClickListener {
-            val intent:Intent = Intent(this,AddNoteActivity::class.java)
+            val intent = Intent(this,AddNoteActivity::class.java)
             startActivityForResult(intent, ADD_NOTE_REQUEST)
         }
 
@@ -70,6 +72,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         }).attachToRecyclerView(recyclerView)
+
+        adapter.setOnItemClickListener(object : NoteAdapter.OnItemClickListener{
+            override fun onItemClick(note: Note) {
+                val intent = Intent(baseContext,AddNoteActivity::class.java)
+                intent.putExtra(EXTRA_TITLE,note.title)
+                intent.putExtra(EXTRA_DESCRIPTION,note.description)
+                intent.putExtra(EXTRA_PRIORITY,note.priority)
+                intent.putExtra(EXTRA_ID, note.id)
+                startActivityForResult(intent, EDIT_NOTE_REQUEST)
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -83,8 +96,22 @@ class MainActivity : AppCompatActivity() {
             noteViewModel.insert(note)
 
             Toast.makeText(this,"Note Saved!",Toast.LENGTH_SHORT).show()
-        }else {
-            Toast.makeText(this, "Note not saved!", Toast.LENGTH_SHORT).show()
+        }else if (requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK){
+            val id = data?.getIntExtra(EXTRA_ID,-1)
+
+            if(id == -1){
+                Toast.makeText(this, "Note can't be updated!", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            val title: String = data!!.getStringExtra(EXTRA_TITLE)
+            val description:String = data.getStringExtra(EXTRA_DESCRIPTION)
+            val priority:Int = data.getIntExtra(EXTRA_PRIORITY,1)
+
+            val note = Note(title,description,priority)
+            note.id = data.getIntExtra(EXTRA_ID,-1)
+            noteViewModel.update(note)
+            Toast.makeText(this, "Note was updated successfully!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -103,5 +130,4 @@ class MainActivity : AppCompatActivity() {
             else ->{ false }
         }
     }
-
 }

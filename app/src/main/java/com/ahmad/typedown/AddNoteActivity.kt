@@ -37,7 +37,15 @@ class AddNoteActivity : AppCompatActivity() {
         priorityPicker.minValue = 1
         priorityPicker.maxValue = 10
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
-        title = "Add Note"
+        if(intent.hasExtra(EXTRA_ID)){
+            title = "Edit Note"
+            titleEditText.setText(intent.getStringExtra(EXTRA_TITLE))
+            descriptionEditText.setText(intent.getStringExtra(EXTRA_DESCRIPTION))
+            priorityPicker.value = intent.getIntExtra(EXTRA_PRIORITY,1)
+
+        }else{
+            title = "Add Note"
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,12 +68,16 @@ class AddNoteActivity : AppCompatActivity() {
             Toast.makeText(this,"Please insert a title and description",Toast.LENGTH_SHORT).show()
             return
         }
+        val id = intent.getIntExtra(EXTRA_ID,-1)
 
         val data=Intent().apply {
             putExtra(EXTRA_TITLE,titleEditText.text.toString())
             putExtra(EXTRA_DESCRIPTION,descriptionEditText.text.toString())
             putExtra(EXTRA_PRIORITY,priorityPicker.value)
             putExtra(EXTRA_ID,titleEditText.text)
+            if(id != -1){
+                putExtra(EXTRA_ID,id)
+            }
         }
 
         setResult(RESULT_OK,data)
